@@ -31,7 +31,7 @@ module edge_detector
         end
     end
 
-    assign sync_out = FF3;
+    assign sync_out = SYNCH_SIG;
   assign out_sig_rising_edge = SYNCH_SIG & ~FF3; // Detect rising edge
   assign out_sig_falling_edge = ~SYNCH_SIG & FF3; // Detect falling edge
 endmodule

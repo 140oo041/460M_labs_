@@ -12,18 +12,25 @@ module one_bit_receiver(input clk, input rst, input req, input data_in,
             data_out <= 1'b0;
             ack <= 1'b0;
             RX_EVENT <= 1'b0;
-        end else if (sync_req_rising_edge || sync_req_falling_edge) begin
-            if(sync_req != ack) begin
+        end 
+//        else if (sync_req_rising_edge || sync_req_falling_edge) begin
+//            if(sync_req != ack) begin
+//                data_out <= data_in;
+//                ack <= sync_req;
+//                RX_EVENT <= 1;
+//            end
+//            else begin
+//                ack <= ack;
+//                data_out <= data_out;
+//                RX_EVENT <= 0;
+//            end 
+//        end
+        else if(sync_req != ack) begin
                 data_out <= data_in;
                 ack <= sync_req;
                 RX_EVENT <= 1;
             end
-            else begin
-                ack <= ack;
-                data_out <= data_out;
-                RX_EVENT <= 0;
-            end 
-        end else begin
+        else begin
             ack <= ack;
             data_out <= data_out;
             RX_EVENT <= RX_EVENT;
