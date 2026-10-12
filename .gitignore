@@ -1,0 +1,13 @@
+# Vivado generated
+*.jou
+*.log
+*.str
+.Xil/
+*.cache/
+*.hw/
+*.sim/
+*.ip_user_files/
+*.runs/
+*.xpr.bak
+# submission artifacts
+*.zip
