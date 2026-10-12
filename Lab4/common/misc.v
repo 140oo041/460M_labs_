@@ -22,7 +22,7 @@ module edge_detector
 
     wire SYNCH_SIG;
     reg FF3;
-    synchronizer sync1(.clk(clk), .rst(rst), .in_sig(in_sig), .out_sig(FF3));
+    synchronizer sync1(.clk(clk), .rst(rst), .in_sig(in_sig), .out_sig(SYNCH_SIG));
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             FF3 <= 1'b0;

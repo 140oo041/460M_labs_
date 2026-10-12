@@ -35,8 +35,7 @@ module one_bit_rec_tb(
     wire ack;
     wire req;
     wire data_master;
-    
-;
+
     
     
     
@@ -53,17 +52,19 @@ module one_bit_rec_tb(
     data_master
 );
 
-always clk = #5 ~clk;
+always #5 clk = ~clk;
 
 initial begin
    clk = 0;
-   rst = 0;
+   rst = 1;
    data_in = 0;
-   #3;
+   send_async = 0;
+   #10;
+   rst = 0;
    send_async = 1;
    #20;
    send_async = 0;
-   #20;
+   #100;
     data_in = 1;
    #5;
    send_async = 1;

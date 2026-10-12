@@ -5,7 +5,7 @@ module one_bit_receiver(input clk, input rst, input req, input data_in,
     wire sync_req_falling_edge;
     wire sync_req;
     
-    edge_detector ed(.clk(clk), .rst(rst), .in_sig(req), .out_sig_rising_edge(sync_req_rising_edge), .out_sig_falling_edge(sync_req_falling_edge), .out_sig(sync_req));
+    edge_detector ed(.clk(clk), .rst(rst), .in_sig(req), .out_sig_rising_edge(sync_req_rising_edge), .out_sig_falling_edge(sync_req_falling_edge), .sync_out(sync_req));
 
     always@(posedge clk or posedge rst) begin
         if (rst) begin
@@ -33,14 +33,14 @@ module one_bit_receiver(input clk, input rst, input req, input data_in,
         else begin
             ack <= ack;
             data_out <= data_out;
-            RX_EVENT <= RX_EVENT;
+            RX_EVENT <= 0;
         end
     end
 
 endmodule
 
 module N_bit_receiver #(parameter N = 8)(input clk, input rst, input req, input data_stream,
- output reg [N-1:0] data_out, output reg ack);
+ output reg [N-1:0] data_out, output ack);
 
     wire received_data;
     wire RX_EVENT;
@@ -65,3 +65,5 @@ module N_bit_receiver #(parameter N = 8)(input clk, input rst, input req, input 
         end
     end
 endmodule
+
+module 
