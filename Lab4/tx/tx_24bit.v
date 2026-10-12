@@ -4,6 +4,7 @@ module tx_24bit (
     input [7:0] sw_in,
     input send_async,
     input ack_async,
+    input sw15,
     output busy,
     output reg req,
     output reg data_out
@@ -83,7 +84,8 @@ module tx_24bit (
             bit_idx <= 5'd23;
         end else begin
             if (toggle_req) req <= ~req;
-            if (capture_sw) tx_packet <= {8'hA5, sw_in, (8'hA5 ^ sw_in)};
+            if (capture_sw) tx_packet <= (sw15) ? {8'hA5, sw_in ^ 8'h01, (8'hA5 ^ sw_in)}
+                                                : {8'hA5, sw_in, (8'hA5 ^ sw_in)};
             if (drive_data) data_out <= tx_packet[bit_idx];
             if (decrement_bit_idx) bit_idx <= (bit_idx == 0) ? 5'd23 : bit_idx - 1;
         end
