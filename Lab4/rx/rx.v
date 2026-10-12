@@ -39,6 +39,131 @@ module one_bit_receiver(input clk, input rst, input req, input data_in,
 
 endmodule
 
+module eight_bit_receiver (input clk, input rst, input req, input data_stream,
+ output reg [7:0] data_out, output ack, output reg valid, output reg error);
+
+    wire received_data;
+    wire RX_EVENT;
+
+ one_bit_receiver bit_receiver (
+    .clk(clk),
+    .rst(rst),
+    .req(req),
+    .data_in(data_stream),
+    .data_out(received_data),
+    .ack(ack),
+    .RX_EVENT(RX_EVENT)
+);
+    wire [7:0] count;
+    wire done;
+
+    N_bit_counter #(8) counter (
+        .clk(clk),
+        .rst(rst),
+        .enable(RX_EVENT),
+        .count(count),
+        .done(done)
+    );
+    
+    always @(posedge clk) begin
+        if(rst) begin valid <= 0; error <= 0; end
+        else if(done) begin 
+            valid <= 1'b1;
+            error <= ~valid;
+        end
+        else begin valid <= valid; error <= error; end
+    end
+
+
+    // always @(posedge clk or posedge rst) begin
+    //     if (rst) begin
+    //         valid <= 0;
+    //         error <= 0;
+    //     end else if (done) begin
+    //         valid <= ((data_out[15:8] ^ data_out[23:16]) == data_out[7:0]) && (data_out[23:16] == 8'hA5); // Check parity
+    //         error <= ~valid;
+    //     end else begin
+    //         valid <= valid;
+    //         error <= error;
+    //     end
+    // end
+    
+    reg[7:0] data_out_;
+    always @(posedge clk or posedge rst) begin
+        if(rst) data_out = 0;
+        else if(valid) data_out = data_out_;
+        else data_out = data_out;
+    end
+
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            data_out_ <= 0;
+        end else if (RX_EVENT) begin
+            data_out_ <= {data_out[6:0], received_data}; // Shift in the received bit
+        end else begin
+            data_out_ <= data_out_;
+        end
+    end
+endmodule
+
+module twenty_four_bit_receiver (input clk, input rst, input req, input data_stream,
+ output reg [24-1:0] data_out, output ack, output reg valid, output reg error);
+
+    wire received_data;
+    wire RX_EVENT;
+
+ one_bit_receiver bit_receiver (
+    .clk(clk),
+    .rst(rst),
+    .req(req),
+    .data_in(data_stream),
+    .data_out(received_data),
+    .ack(ack),
+    .RX_EVENT(RX_EVENT)
+);
+    wire [24-1:0] count;
+    wire done;
+
+    N_bit_counter #(24) counter (
+        .clk(clk),
+        .rst(rst),
+        .enable(RX_EVENT),
+        .count(count),
+        .done(done)
+    );
+
+
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            valid <= 0;
+            error <= 0;
+        end else if (done) begin
+            valid <= ((data_out[15:8] ^ data_out[23:16]) == data_out[7:0]) && (data_out[23:16] == 8'hA5); // Check parity
+            error <= ~valid;
+        end else begin
+            valid <= valid;
+            error <= error;
+        end
+    end
+    
+    reg[23:0] data_out_;
+    always @(posedge clk or posedge rst) begin
+        if(rst) data_out = 0;
+        else if(valid) data_out = data_out_;
+        else data_out = data_out;
+    end
+
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            data_out <= 0;
+        end else if (RX_EVENT) begin
+            data_out <= {data_out[24-2:0], received_data}; // Shift in the received bit
+        end else begin
+            data_out <= data_out;
+        end
+    end
+endmodule
+
 module N_bit_receiver #(parameter N = 8)(input clk, input rst, input req, input data_stream,
  output reg [N-1:0] data_out, output ack, output reg valid, output reg error);
 
@@ -78,6 +203,13 @@ module N_bit_receiver #(parameter N = 8)(input clk, input rst, input req, input 
             error <= error;
         end
     end
+    
+    reg[N-1:0] data_out_;
+    always @(posedge clk or posedge rst) begin
+        if(rst) data_out = 0;
+        else if(valid) data_out = data_out_;
+        else data_out = data_out;
+    end
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -91,8 +223,8 @@ module N_bit_receiver #(parameter N = 8)(input clk, input rst, input req, input 
 endmodule
 
 module N_bit_counter #(parameter N = 8) (
-    input clk, rst, input enable, output reg [N-1:0] count, output reg done
-)
+    input clk, rst, input enable, output reg [$clog2(N):0] count, output reg done
+);
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             count <= 0;
