@@ -132,34 +132,54 @@ module twenty_four_bit_receiver (input clk, input rst, input req, input data_str
         .done(done)
     );
 
+    reg[23:0] data_out_acc;
+    reg valid_sig;
+    reg error_sig;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             valid <= 0;
             error <= 0;
         end else if (done) begin
-            valid <= ((data_out[15:8] ^ data_out[23:16]) == data_out[7:0]) && (data_out[23:16] == 8'hA5); // Check parity
+            valid_sig <= ((data_out_acc[15:8] ^ data_out_acc[23:16]) == data_out_acc[7:0]) && (data_out_acc[23:16] == 8'hA5); // Check parity
             error <= ~valid;
+            valid <= ((data_out_acc[15:8] ^ data_out_acc[23:16]) == data_out_acc[7:0]) && (data_out_acc[23:16] == 8'hA5);
         end else begin
             valid <= valid;
             error <= error;
+            valid_sig <= 0;
         end
     end
     
-    reg[23:0] data_out_;
+    always @(posedge clk) begin
+        
+    end
+    
+    reg Valid_prev;
+    always @(posedge clk) begin
+        Valid_prev <= valid_sig;
+    end    
+    wire Valid_rising_edge = ~Valid_prev & valid_sig;
+    
+//    reg done_prev;
+//    always @(posedge clk) begin
+//        done_prev <= done;
+//    end
+//    wire done_rising_edge = ~done_prev & done;
+
     always @(posedge clk or posedge rst) begin
         if(rst) data_out = 0;
-        else if(valid) data_out = data_out_;
+        else if(Valid_rising_edge) data_out = data_out_acc;
         else data_out = data_out;
     end
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            data_out <= 0;
+            data_out_acc <= 0;
         end else if (RX_EVENT) begin
-            data_out <= {data_out[24-2:0], received_data}; // Shift in the received bit
+            data_out_acc <= {data_out_acc[24-2:0], received_data}; // Shift in the received bit
         end else begin
-            data_out <= data_out;
+            data_out_acc <= data_out_acc;
         end
     end
 endmodule
