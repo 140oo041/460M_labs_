@@ -4,13 +4,16 @@ input clk,rst,
  output ack, output [7:0] last,
  output VALID, ERROR,
  output [6:0] seg, output [3:0] an);
-    
+
+    wire [23:0] out;
+    assign last = out [15:8];
+
     twenty_four_bit_receiver (
         .clk(clk),
         .rst(rst),
         .req(req),
         .data_stream(DATA),
-        .data_out(last),
+        .data_out(out),
         .ack(ack),
         .valid(VALID),
         .error(ERROR)
@@ -29,7 +32,7 @@ input clk,rst,
         .rst(rst),
         .value(last),
         .an(an),
-        .seg(ssg)
+        .seg(seg)
     );
 
 
