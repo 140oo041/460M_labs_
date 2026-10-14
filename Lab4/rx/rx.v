@@ -1,3 +1,26 @@
+module top(
+input clk,rst,
+ input DATA,req,
+ output ack, output [7:0] last,
+ output VALID, ERROR,
+ output [6:0] ssg);
+    
+    twenty_four_bit_receiver (
+        .clk(clk),
+        .rst(rst),
+        .req(req),
+        .data_stream(DATA),
+        .data_out(last),
+        .ack(ack),
+        .valid(VALID),
+        .error(ERROR)
+    );
+
+    
+    
+ 
+endmodule 
+
 module one_bit_receiver(input clk, input rst, input req, input data_in,
  output reg data_out, output reg ack, output reg RX_EVENT);
 
