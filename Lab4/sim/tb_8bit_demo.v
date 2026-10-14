@@ -23,7 +23,7 @@ module tb_8bit_demo;
         .busy(busy), .req(req), .data_out(data)
     );
 
-    N_bit_receiver #(.N(8)) rx_dut (
+    eight_bit_receiver rx_dut (
         .clk(clk_rx), .rst(rst), .req(req), .data_stream(data),
         .data_out(rx_data), .ack(ack)
     );

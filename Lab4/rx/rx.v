@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module top(
 input clk,rst,
  input DATA,req,
@@ -8,7 +10,7 @@ input clk,rst,
     wire [23:0] out;
     assign last = out [15:8];
 
-    twenty_four_bit_receiver (
+    twenty_four_bit_receiver rx_inst (
         .clk(clk),
         .rst(rst),
         .req(req),
@@ -133,43 +135,20 @@ module eight_bit_receiver (input clk, input rst, input req, input data_stream,
         .done(done)
     );
     
-    always @(posedge clk) begin
-        if(rst) begin valid <= 0; error <= 0; end
-        else if(done) begin 
-            valid <= 1'b1;
-            error <= ~valid;
-        end
-        else begin valid <= valid; error <= error; end
-    end
-
-
-    // always @(posedge clk or posedge rst) begin
-    //     if (rst) begin
-    //         valid <= 0;
-    //         error <= 0;
-    //     end else if (done) begin
-    //         valid <= ((data_out[15:8] ^ data_out[23:16]) == data_out[7:0]) && (data_out[23:16] == 8'hA5); // Check parity
-    //         error <= ~valid;
-    //     end else begin
-    //         valid <= valid;
-    //         error <= error;
-    //     end
-    // end
-    
-    reg[7:0] data_out_;
-    always @(posedge clk or posedge rst) begin
-        if(rst) data_out = 0;
-        else if(valid) data_out = data_out_;
-        else data_out = data_out;
-    end
-
+    reg [7:0] shift_reg;
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            data_out_ <= 0;
-        end else if (RX_EVENT) begin
-            data_out_ <= {data_out[6:0], received_data}; // Shift in the received bit
+            shift_reg <= 0;
+            data_out <= 0;
+            valid <= 0;
+            error <= 0;
         end else begin
-            data_out_ <= data_out_;
+            if (RX_EVENT) shift_reg <= {shift_reg[6:0], received_data};
+            if (done) begin
+                data_out <= shift_reg;
+                valid <= 1;
+                error <= 0;
+            end
         end
     end
 endmodule

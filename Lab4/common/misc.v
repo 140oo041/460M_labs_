@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module synchronizer(input clk, input rst, input in_sig, output wire out_sig);
 
   reg FF1;

@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module ff_sync (
     input clk,
     input rst,

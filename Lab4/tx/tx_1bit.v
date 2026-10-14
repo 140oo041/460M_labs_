@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module tx_1bit (
     input clk,
     input rst,

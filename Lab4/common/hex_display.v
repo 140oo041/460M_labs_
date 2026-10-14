@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module hex_display (
     input clk,
     input rst,

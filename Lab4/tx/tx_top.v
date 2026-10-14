@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module tx_top (
     input clk,
     input btn_rst,
