@@ -19,7 +19,7 @@ Bit 7 sign, bits [6:3] exponent `E`, bits [2:0] fraction `F`. The 6-bit `bias` i
 4. **Overflow.** If the rounded exponent is above 15, the result is `8'h7F` (positive) or `8'hFF` (negative). Rounding up from `E = 15, F = 7` counts as overflow.
 5. **Underflow.** If the rounded exponent is 0 or below, the result is `8'h00`. The lab never tests this.
 6. **Exponent width.** Exponent arithmetic is signed. For a 6-bit bias the multiplier's exponent runs from −61 to +32, so 8 signed bits is enough.
-7. **Biases.** Only 9 through 12 are tested. The datapath should still be written for any 6-bit bias, but 0–8 and 13–63 are never verified.
+7. **Biases.** Only 9 through 12 are tested, so those are the only ones we verify.
 
 Rules 1, 2, and 5 close gaps the PDF leaves. Denormal encodings (`E == 0`, `F != 0`) and underflow are "will not be tested" in §b and §e, so these choices are for determinism only.
 
@@ -51,13 +51,3 @@ This doc owns no files. The executable version of these rules is `model/cf8.py`,
 
 ### Open questions
 None yet.
-
-## Design notes
-Fill in during step 1.
-
-## Results
-None. This is a rules doc.
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|

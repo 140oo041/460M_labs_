@@ -14,7 +14,7 @@ The seam is arithmetic versus dataflow. Whoever writes a block doesn't write wha
 | | Person A: arithmetic | Person B: dataflow |
 |---|---|---|
 | RTL | `rtl/cf8_mul.v`, `rtl/cf8_add.v` | `rtl/cf8_pe.v`, `rtl/matrix.v` |
-| Checks | `tb/cf8_mul_tb.v`, `tb/cf8_add_tb.v`, `tb/matrix_sys_tb.v` | `model/cf8.py`, `model/test_cf8.py`, `tb/cf8_pe_tb.v` |
+| Checks | `tb/cf8_mul_tb.v`, `tb/cf8_add_tb.v`, `tb/matrix_sys_tb.v` | `model/cf8.py` |
 | Docs | [cf8-mul](docs/cf8-mul.md), [cf8-add](docs/cf8-add.md) | [golden-model](docs/golden-model.md), [cf8-pe](docs/cf8-pe.md), [matrix](docs/matrix.md) |
 | Shared | | `Makefile`, `scripts/` |
 
@@ -28,14 +28,14 @@ You each edit only your own files, so we shouldn't hit merge conflicts. [`README
 
 ## Person B: dataflow
 1. **Golden model**, step 2. [Spec](docs/golden-model.md). First thing, because A's testbenches need its vectors. Check it against the worked examples in [cf8-format.md](docs/cf8-format.md#worked-examples). Add a `vectors` target to the `Makefile`.
-2. **PE**, step 5. [Spec](docs/cf8-pe.md). Write `cf8_pe_tb.v`. Use A's placeholders until the real mul and add land.
-3. **Top level**, step 6. [Spec](docs/matrix.md). Start from the instructor's `matrix.v`. Latch, cycle counter, schedule mux, 3×3 grid, output gating. Test the schedule on its own first: check each PE's operand inputs cycle by cycle against the schedule in the spec. That doesn't need working arithmetic.
+2. **PE**, step 5. [Spec](docs/cf8-pe.md). No testbench of its own, A's system testbench covers it. Use A's placeholders until the real mul and add land.
+3. **Top level**, step 6. [Spec](docs/matrix.md). Start from the instructor's `matrix.v`. Latch, cycle counter, schedule mux, 3×3 grid, output gating.
 4. **Synthesis script**, step 7. `make synth` already runs `scripts/synth.tcl`. Read the report, check latches are 0, hand the numbers to the shared task below.
 
 ## Together
 - **Integration.** Swap in the real mul and add, run A's system testbench against B's top level, fix what breaks. Bias sweep 9–12.
-- **Submission**, step 7. Fill the utilization table in [matrix.md](docs/matrix.md#results) from `reports/utilization.txt`. Build `EID1_EID2_Lab6.zip` from all `rtl/` and `tb/` Verilog plus the table.
-- **Walkthrough.** The checkout asks about any part of the design. Each of us walks the other through the half they wrote, and we trace one 3×3 case through the array by hand.
+- **Submission**, step 7. Fill [`reports/utilization_table.md`](reports/utilization_table.md) from `reports/utilization.txt`. Build `EID1_EID2_Lab6.zip` from all `rtl/` and `tb/` Verilog plus that table.
+- **Walkthrough.** The checkout asks about any part of the design. Each of us walks the other through the half they wrote.
 
 ## Sync points
 | # | When | What has to be true |

@@ -39,17 +39,6 @@ Module `cf8_mul`, file `rtl/cf8_mul.v`. Purely combinational, no clock.
 ### Done when
 - [ ] `make sim T=cf8_mul_tb` compares all 65 536 `{a, b}` pairs at each of biases 9, 10, 11, 12 and reports zero mismatches. Pairs with `dc = 1` are skipped.
 - [ ] The multiply rows in the worked examples of [cf8-format.md](cf8-format.md#worked-examples) pass.
-- [ ] No latches inferred. Checked in the full-design synthesis report.
 
 ### Open questions
 None yet.
-
-## Design notes
-Fill in during step 3.
-
-## Results
-Fill in during step 3. Measured numbers only, with the command that produced them.
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|

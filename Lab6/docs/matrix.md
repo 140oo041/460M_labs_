@@ -67,7 +67,8 @@ Structure and rules:
 | `tb/provided/matrix_tb.v` | planned | instructor's 3-case example testbench. Not in the repo yet, see [PLAN.md](../PLAN.md#before-we-start) |
 | `tb/matrix_sys_tb.v` | planned | our system testbench, covers the checklist below |
 | `scripts/synth.tcl` | present | post-synthesis utilization, run by `make synth` |
-| `reports/utilization.txt` | generated | the report the table below comes from |
+| `reports/utilization.txt` | generated | Vivado's raw report, written by `make synth` |
+| `reports/utilization_table.md` | present | the 4-number table we submit |
 
 ### Done when
 Simulation (system testbench):
@@ -82,23 +83,12 @@ Simulation (system testbench):
 - [ ] Directed cases: `A = I` returns `B`, ±0 inputs, saturation in both signs, exact cancellation, rounding ties.
 
 Synthesis and submission:
-- [ ] `make synth` succeeds on `XC7A35TCPG236-1` and the table below is filled from `reports/utilization.txt`. Latches should be 0.
-- [ ] `EID1_EID2_Lab6.zip` holds all `rtl/` and `tb/` Verilog and the filled table. Lab 4 used `sc73994_at49454_Lab4.zip`, check the Lab 6 pair is the same.
+- [ ] `make synth` succeeds on `XC7A35TCPG236-1` and [`reports/utilization_table.md`](../reports/utilization_table.md) is filled from `reports/utilization.txt`. Latches should be 0.
+- [ ] `EID1_EID2_Lab6.zip` holds all `rtl/` and `tb/` Verilog and `reports/utilization_table.md`. Lab 4 used `sc73994_at49454_Lab4.zip`, check the Lab 6 pair is the same.
 - [ ] Each of us can explain every block, including the half we didn't write.
 
 ### Open questions
 1. Gate the outputs with `done` (`c = done ? acc : 00`, no extra flops) or add nine output registers? Leaning gating.
 
-## Design notes
-Fill in during step 6.
-
 ## Results
-Post-synthesis, `XC7A35TCPG236-1`, Vivado, from `reports/utilization.txt`. Fill in during step 7.
-
-| LUT usage | Flip-flop usage | Latch usage | DSP usage |
-|---|---|---|---|
-| | | | |
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|
+Post-synthesis table for the submission: [`reports/utilization_table.md`](../reports/utilization_table.md). Fill it in from `reports/utilization.txt` after `make synth`.

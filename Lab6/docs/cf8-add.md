@@ -37,7 +37,6 @@ Module `cf8_add`, file `rtl/cf8_add.v`. Purely combinational, no clock. Names fo
 ### Done when
 - [ ] `make sim T=cf8_add_tb` compares all 65 536 `{acc, p}` pairs at each of biases 9, 10, 11, 12 and reports zero mismatches. Pairs with `dc = 1` are skipped.
 - [ ] The add rows in the worked examples of [cf8-format.md](cf8-format.md#worked-examples) pass.
-- [ ] No latches inferred. Checked in the full-design synthesis report.
 
 ### Open questions
 None yet.
@@ -48,10 +47,3 @@ Two ways to handle the shifted-out bits, pick one:
 - **Exact alignment.** Shift `big` left by `d` instead, so nothing is lost. The sum is up to about 19 bits wide. Bigger, but it's obviously correct, and rounding happens once at the end.
 
 The exhaustive testbench settles whichever you choose.
-
-## Results
-Fill in during step 4. Measured numbers only, with the command that produced them.
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|

@@ -21,7 +21,6 @@ All values are Python `int` in 0–255 (an encoding) unless noted.
 | `matmul(A, B, bias)` | two 3×3 lists of encodings, bias | 3×3 list of encodings |
 
 Command line: `python3 model/cf8.py` writes all vector files into `vectors/` (gitignored, regenerated on demand).
-Self-test: `python3 model/test_cf8.py` checks the worked examples in [cf8-format.md](cf8-format.md).
 
 ### Behavior
 - `matmul` accumulates in the hardware's order: start at `00`, then for `k = 0, 1, 2` do `acc = add(acc, mul(A[i][k], B[k][j], bias), bias)`.
@@ -43,24 +42,13 @@ Matrix files hold directed cases (identity, all zeros, ±0 inputs, saturating, c
 ### Files
 | File | Status | What it is |
 |---|---|---|
-| `model/cf8.py` | planned | `decode`, `encode`, `mul`, `add`, `matmul`, vector writer |
-| `model/test_cf8.py` | planned | worked examples as asserts |
+| `model/cf8.py` | planned | `decode`, `encode`, `mul`, `add`, `matmul`, vector writer. A few asserts for the worked examples can live in here |
 | `vectors/` | generated | not committed |
 
 ### Done when
-- [ ] `python3 model/test_cf8.py` passes.
+- [ ] The model reproduces every worked example in [cf8-format.md](cf8-format.md#worked-examples).
 - [ ] `python3 model/cf8.py` writes all 12 vector files.
 - [ ] One 3×3 case worked by hand matches `matmul`. Identity times `B` returns `B`.
 
 ### Open questions
 None yet.
-
-## Design notes
-Fill in during step 2.
-
-## Results
-None. Tooling only.
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|

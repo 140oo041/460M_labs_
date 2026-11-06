@@ -52,4 +52,4 @@ make clean
 | `tb/` | our testbenches. `tb/provided/` holds the instructor's |
 | `model/` | Python golden model |
 | `scripts/` | Vivado synthesis script |
-| `reports/` | post-synthesis utilization report |
+| `reports/` | post-synthesis utilization report and the table we submit |

@@ -36,23 +36,9 @@ There is no valid bit. A zero operand gives a zero product, and adding zero leav
 | File | Status | What it is |
 |---|---|---|
 | `rtl/cf8_pe.v` | planned | the PE |
-| `tb/cf8_pe_tb.v` | planned | PE testbench |
 
 ### Done when
-- [ ] `make sim T=cf8_pe_tb` passes with the real mul and add.
-- [ ] After three `en` cycles with products `p0, p1, p2`, `acc` equals `add(add(add(00, p0), p1), p2)` from the [golden model](golden-model.md).
-- [ ] `a_out` and `b_out` equal the inputs delayed by exactly one edge.
-- [ ] `clear` beats `en` when both are high. `en = 0` holds all state.
+- [ ] Passes the system testbench in [matrix.md](matrix.md#done-when) with the real mul and add.
 
 ### Open questions
 None yet.
-
-## Design notes
-Fill in during step 5.
-
-## Results
-Fill in during step 5.
-
-## Bug log
-| # | Symptom | Root cause | Fix | Caught by |
-|---|---|---|---|---|
