@@ -63,8 +63,8 @@ Structure and rules:
 ### Files
 | File | Status | What it is |
 |---|---|---|
-| `rtl/matrix.v` | planned | module `Matrix`: latch, cycle counter, schedule mux, PE grid, output gating |
-| `tb/provided/matrix_tb.v` | planned | instructor's 3-case example testbench. Not in the repo yet, see [PLAN.md](../PLAN.md#before-we-start) |
+| `rtl/matrix.v` | starter only | instructor's file: port list and an empty body. We fill in the body: latch, cycle counter, schedule mux, PE grid, output gating |
+| `tb/provided/matrix_tb.v` | present | instructor's 3-case sample testbench, module `matrix_tb`. Unmodified |
 | `tb/matrix_sys_tb.v` | planned | our system testbench, covers the checklist below |
 | `scripts/synth.tcl` | present | post-synthesis utilization, run by `make synth` |
 | `reports/utilization.txt` | generated | Vivado's raw report, written by `make synth` |

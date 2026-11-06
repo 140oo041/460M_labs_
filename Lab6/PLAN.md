@@ -5,7 +5,6 @@ How the two of us split [Lab 6](ECE460M_Lab6_Fall2026.pdf), and in what order. W
 Due one week from Thu Nov 5 (check the exact time on Canvas). Target: everything passing by Sunday, synthesis and zip by Tuesday, Wednesday as buffer.
 
 ## Before we start
-- The PDF refers to an instructor `matrix.v` (the port list) and `matrix_tb.v` (three sample cases). Neither is in the repo. Whoever has Canvas open: `matrix.v` goes in `rtl/`, `matrix_tb.v` goes in `tb/provided/`.
 - We each read the PDF once (6 pages), then [cf8-format.md](docs/cf8-format.md). That file closes the corners the PDF leaves open. Object now, not on Sunday.
 
 ## The split
@@ -24,12 +23,12 @@ You each edit only your own files, so we shouldn't hit merge conflicts. [`README
 1. **Placeholders first.** Push `cf8_mul.v` and `cf8_add.v` with the right ports and a dummy body, so B can compile the PE. Ten minutes, do it before anything else.
 2. **Multiplier**, step 3. [Spec](docs/cf8-mul.md). Write `cf8_mul_tb.v` as an exhaustive check against B's vectors. The vectors land with B's step 1, so write the RTL first.
 3. **Adder**, step 4. [Spec](docs/cf8-add.md). The hardest block, so start it early Saturday. Same exhaustive testbench pattern.
-4. **System testbench**, for step 6. `tb/matrix_sys_tb.v`, checklist in [matrix.md](docs/matrix.md#done-when). You can write it from the spec before B's top level exists. Start from the provided `matrix_tb.v`.
+4. **System testbench**, for step 6. `tb/matrix_sys_tb.v`, checklist in [matrix.md](docs/matrix.md#done-when). You can write it from the spec before B's top level exists. Use `tb/provided/matrix_tb.v` as the template.
 
 ## Person B: dataflow
 1. **Golden model**, step 2. [Spec](docs/golden-model.md). First thing, because A's testbenches need its vectors. Check it against the worked examples in [cf8-format.md](docs/cf8-format.md#worked-examples). Add a `vectors` target to the `Makefile`.
 2. **PE**, step 5. [Spec](docs/cf8-pe.md). No testbench of its own, A's system testbench covers it. Use A's placeholders until the real mul and add land.
-3. **Top level**, step 6. [Spec](docs/matrix.md). Start from the instructor's `matrix.v`. Latch, cycle counter, schedule mux, 3×3 grid, output gating.
+3. **Top level**, step 6. [Spec](docs/matrix.md). Fill in the body of the instructor's `rtl/matrix.v`, keep its port list untouched. Latch, cycle counter, schedule mux, 3×3 grid, output gating.
 4. **Synthesis script**, step 7. `make synth` already runs `scripts/synth.tcl`. Read the report, check latches are 0, hand the numbers to the shared task below.
 
 ## Together
@@ -40,7 +39,7 @@ You each edit only your own files, so we shouldn't hit merge conflicts. [`README
 ## Sync points
 | # | When | What has to be true |
 |---|---|---|
-| S0 | Fri | Both read the docs. Format rules agreed. Instructor files in the repo. |
+| S0 | Fri | Both read the docs. Format rules agreed. |
 | S1 | Sat morning | A's placeholders pushed. B's model and vectors pushed. |
 | S2 | Sat night to Sun | Mul and add pass exhaustively. PE passes. Top level compiles. If the adder isn't passing by Saturday night, B drops what they're doing and pairs on it. |
 | S3 | Sunday | System testbench passes on the real design. |
