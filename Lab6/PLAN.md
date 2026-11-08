@@ -1,52 +1,29 @@
-# Lab 6 plan
+# Who does what
 
-How the two of us split [Lab 6](ECE460M_Lab6_Fall2026.pdf), and in what order. What each block must do is in its doc under [`docs/`](docs/). This file only says who builds what and when we sync. Delete it after we submit.
+Details of what to build are in [docs/spec.md](docs/spec.md). Read it first, both of you. Aim: everything passing by Sunday night, synthesis and zip Monday or Tuesday, Wednesday spare.
 
-Due one week from Thu Nov 5 (check the exact time on Canvas). Target: everything passing by Sunday, synthesis and zip by Tuesday, Wednesday as buffer.
+## Person A: floating-point math
+Files: `rtl/cf8_mul.v`, `rtl/cf8_add.v`, `tb/cf8_mul_tb.v`, `tb/cf8_add_tb.v`, `tb/matrix_sys_tb.v`
 
-## Before we start
-- We each read the PDF once (6 pages), then [cf8-format.md](docs/cf8-format.md). That file closes the corners the PDF leaves open. Object now, not on Sunday.
+1. Push `cf8_mul.v` and `cf8_add.v` with the right ports and an empty body, so Person B can compile.
+2. Build the multiplier. Test it against Person B's model.
+3. Build the adder. Start this early, it's the hardest part. Test it the same way.
+4. Write `tb/matrix_sys_tb.v`, the full-design test from "What to test" in the spec. Use `tb/provided/matrix_tb.v` as a template.
 
-## The split
-The seam is arithmetic versus dataflow. Whoever writes a block doesn't write what checks it: Person A's arithmetic is checked by Person B's model, and Person B's top level is checked by Person A's system testbench.
+## Person B: PE and top level
+Files: `model/cf8.py`, `rtl/cf8_pe.v`, `rtl/matrix.v`
 
-| | Person A: arithmetic | Person B: dataflow |
-|---|---|---|
-| RTL | `rtl/cf8_mul.v`, `rtl/cf8_add.v` | `rtl/cf8_pe.v`, `rtl/matrix.v` |
-| Checks | `tb/cf8_mul_tb.v`, `tb/cf8_add_tb.v`, `tb/matrix_sys_tb.v` | `model/cf8.py` |
-| Docs | [cf8-mul](docs/cf8-mul.md), [cf8-add](docs/cf8-add.md) | [golden-model](docs/golden-model.md), [cf8-pe](docs/cf8-pe.md), [matrix](docs/matrix.md) |
-| Shared | | `Makefile`, `scripts/` |
+1. Write `model/cf8.py` first, because Person A's tests need it. Python with exact fractions: mul, add, and matrix multiply that match the spec. Check it against the examples table. Make it write expected-output files the testbenches can load. Simplest is one hex file per bias, 65 536 lines, line number = `{a, b}`, for `$readmemh`.
+2. Build `cf8_pe.v`. Use Person A's empty modules until the real ones land.
+3. Fill in the body of `rtl/matrix.v`: latch the inputs, cycle counter, feed the schedule, nine PEs, `busy`, `done`, outputs held at `00` until done.
+4. Run the provided test: `make sim T=matrix_tb`.
 
-You each edit only your own files, so we shouldn't hit merge conflicts. [`README.md`](README.md) (progress table) is the one file we both touch.
+## Both
+- Plug in the real math, run Person A's full test against Person B's top level, fix what breaks.
+- `make synth`, fill in `reports/utilization_table.md`, build the zip (see spec).
+- Each of you explains the half you didn't write to the other. Checkout can ask about any part.
 
-## Person A: arithmetic
-1. **Placeholders first.** Push `cf8_mul.v` and `cf8_add.v` with the right ports and a dummy body, so B can compile the PE. Ten minutes, do it before anything else.
-2. **Multiplier**, step 3. [Spec](docs/cf8-mul.md). Write `cf8_mul_tb.v` as an exhaustive check against B's vectors. The vectors land with B's step 1, so write the RTL first.
-3. **Adder**, step 4. [Spec](docs/cf8-add.md). The hardest block, so start it early Saturday. Same exhaustive testbench pattern.
-4. **System testbench**, for step 6. `tb/matrix_sys_tb.v`, checklist in [matrix.md](docs/matrix.md#done-when). You can write it from the spec before B's top level exists. Use `tb/provided/matrix_tb.v` as the template.
-
-## Person B: dataflow
-1. **Golden model**, step 2. [Spec](docs/golden-model.md). First thing, because A's testbenches need its vectors. Check it against the worked examples in [cf8-format.md](docs/cf8-format.md#worked-examples). Add a `vectors` target to the `Makefile`.
-2. **PE**, step 5. [Spec](docs/cf8-pe.md). No testbench of its own, A's system testbench covers it. Use A's placeholders until the real mul and add land.
-3. **Top level**, step 6. [Spec](docs/matrix.md). Fill in the body of the instructor's `rtl/matrix.v`, keep its port list untouched. Latch, cycle counter, schedule mux, 3×3 grid, output gating.
-4. **Synthesis script**, step 7. `make synth` already runs `scripts/synth.tcl`. Read the report, check latches are 0, hand the numbers to the shared task below.
-
-## Together
-- **Integration.** Swap in the real mul and add, run A's system testbench against B's top level, fix what breaks. Bias sweep 9–12.
-- **Submission**, step 7. Fill [`reports/utilization_table.md`](reports/utilization_table.md) from `reports/utilization.txt`. Build `EID1_EID2_Lab6.zip` from all `rtl/` and `tb/` Verilog plus that table.
-- **Walkthrough.** The checkout asks about any part of the design. Each of us walks the other through the half they wrote.
-
-## Sync points
-| # | When | What has to be true |
-|---|---|---|
-| S0 | Fri | Both read the docs. Format rules agreed. |
-| S1 | Sat morning | A's placeholders pushed. B's model and vectors pushed. |
-| S2 | Sat night to Sun | Mul and add pass exhaustively. PE passes. Top level compiles. If the adder isn't passing by Saturday night, B drops what they're doing and pairs on it. |
-| S3 | Sunday | System testbench passes on the real design. |
-| S4 | Mon–Tue | Synthesis table filled, zip built, walkthrough done. |
-
-## Working rules
-- Commit prefix `lab6:`. `git pull --rebase` before every push. We push to `main`, same as Lab 4.
-- A step ships when its "Done when" boxes are checked in its doc. Check them in the same commit, and update the progress table in the [README](README.md#progress).
-- Change a rule in [cf8-format.md](docs/cf8-format.md) and both of us hear about it before anyone codes against it.
-- Don't commit `vectors/`. `make` regenerates it.
+## Ground rules
+- Edit your own files only. Pull before you push (`git pull --rebase`), commit messages start with `lab6:`.
+- Tick the boxes in the [README](README.md) as things pass.
+- If the adder isn't passing by Saturday night, Person B stops and helps.
