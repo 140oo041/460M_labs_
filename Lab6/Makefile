@@ -10,7 +10,7 @@ TB  := $(firstword $(wildcard tb/$(T).v tb/provided/$(T).v))
 # make sim T=cf8_mul_tb    T is the testbench module name, in tb/<T>.v
 sim:
 	@test -n "$(TB)" || { echo "no tb/$(T).v or tb/provided/$(T).v"; exit 1; }
-	xvlog $(RTL) $(TB)
+	xvlog -i tb $(RTL) $(TB)
 	xelab --timescale 1ns/1ps $(T) -s $(T)_sim
 	xsim $(T)_sim -runall
 
